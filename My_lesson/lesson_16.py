@@ -1,81 +1,102 @@
-from PIL import Image
-from pillow_heif import register_heif_opener, from_pillow as heif_from_pillow
-import pillow_avif
-import os
+# TODO Функции. Ч3. Разбор ДЗ. Работа с файлами. Практика. Урок 16
 
-ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "dng"]
+txt_file = "lesson_16.txt"
 
-my_image = r"C:\Users\ALEXSTONE\Desktop\photo_2025-01-23_21-30-45.jpg"
+# относительные пути
+# ./ - текущая директория
+# ../ - родительская директория
+# ../../ - родительская директория родительской директории
 
-# Регистрируем форматы
-register_heif_opener()
+# Абсолютные пути
+# "C:\Users\ALEXSTONE\Desktop\домашка 2.jpg"
 
-source_path = r"C:\ALEXXX\Python Alex"
+# открываем файл
+# file = open(txt_file, "w",
+# encoding="utf-8")
 
-def compress_image(file_path: str, quality: int = 50, format: str = "avif") -> None:
+# # запишем в файл текст
+# file.write("Первая строка" + "\n")
+# file.write("Вторая строка" + "\n")
+
+# file.close()
+
+# ФЛаги
+# r -  открывает файл только для чтения - падает с ошибкой если файла нет
+# w - открывает файл для записи - создает файл если его нет
+# a - открывает файл для добавления данных - создаст файл если его нет
+# b - открыть файл в бинарном режиме
+
+# Список функций для TXT
+# open() - открывает файл и возвращает итератор
+# read() - прочитать весь файл - возвращает строку с содержимым всего файла. Если файл большой, может занять много памяти
+# readline() - прочитать одну строку - возвращает строку до символа переноса строки \n. При повторном вызове читает следующую строку
+# readlines() - прочитать все строки и вернуть список строк - каждый элемент списка это отдельная строка с \n в конце
+# write() - записать данные в файл - принимает строку, возвращает количество записанных символов. Не добавляет \n автоматически
+# writelines() - записать список строк в файл - принимает список строк, не добавляет \n между строками автоматически. Нужно добавлять самостоятельно
+# close() - закрывает файл и освобождает ресурсы. Важно всегда закрывать файлы после работы
+
+file = open(txt_file, 'r', encoding="utf8") 
+# <_io.TextIOWrapper name='lesson_16.txt' mode='r' encoding='utf8'>
+
+# Интеративное чтение файла
+# print(file)
+# print(next(file))
+
+# for line in file:
+#     print(line)
+
+# file.close() 
+# print(file.readline().strip())
+# print(file.readline().strip())
+# print(file.readline().strip())
+
+# lines = file.readlines()
+# clear_lines = [line.strip() for line in lines]
+# print(clear_lines)
+
+# file.close()  # закрываем файл после работы
+
+#  PRACTICE
+"""
+1. Функция чтения txt файла read_txt(file_path: str, encoding: str = "utf-8") -> list[str]
+2. Функция записи txt файла write_txt(file_path: str, data: list[str], encoding: str = "utf-8") -> None
+3. Функция добавления txt файла append_txt(file_path: str, data: list[str], encoding: str = "utf-8") -> None
+"""
+def read_txt(file_path: str, encoding: str = "utf-8") -> list[str]
     """
-    Сжимает изображение в указанный формат с заданным качеством.
+    Функции для текстового документа
+    :param :
+    :return :
+    :raise :
 
-    :param file_path: Путь к исходному изображению.
-    :param quality: Качество сжатия (по умолчанию 50).
-    :param format: Формат сжатия (по умолчанию "avif").
     """
-    # Поддерживаемые форматы
-    supported_formats = ["webp", "heic", "avif"]
+    file = open(file_path, 'r', encoding="utf-8")
+    lines = file.readlines()
+    clear_lines = [line.strip() for line in lines]
+    file.close()
+    return clear_lines
 
-    # Проверка поддерживаемого формата
-    if format not in supported_formats:
-        raise ValueError(f"Формат {format} не поддерживается")
-        
-        # Открываем изображение
-    image = Image.open(file_path)
-
-    # Формируем новое имя файла
-    new_file_path = os.path.splitext(file_path)[0] + f".{format}"
-
-    if format in ["webp", "avif"]:
-            image.save(new_file_path, format=format, quality=quality)
-            return
-    
-    if format == "heic":
-            heif_file = heif_from_pillow(image)
-            heif_file.save(new_file_path, quality=quality)
-
-def get_image_paths(source_path: str, allowed_extensions: list[str]) -> list[str]:
+def write_txt(file_path: str, data: list[str], encoding: str = "utf-8") -> None:
     """
-    Возвращает список путей к изображениям с поддерживаемыми расширениями в указанной директории.
+    Функции для текстового документа
+    :param :
+    :return :
+    :raise :
 
-    :param source_path: Путь к директории или файлу.
-    :param allowed_extensions: Список поддерживаемых расширений.
-    :return: Список путей к изображениям.
     """
-    if not os.path.exists(source_path):
-        raise ValueError(f"Путь {source_path} не существует")
+    file = open(file_path, 'w', encoding=encoding)
+    file.writelines(data)
+    file.close()
 
-    if os.path.isfile(source_path):
-        return [source_path]
 
-    images = []
-    for root, dirs, files in os.walk(source_path):
-        for file in files:
-            full_path = os.path.join(root, file)
-            if os.path.isfile(full_path):
-                if file.split('.')[-1] in allowed_extensions:
-                    images.append(full_path)
-
-    return images
-
-def main() -> None:
+def append_txt(file_path: str, data: list[str], encoding: str = "utf-8") -> None:
     """
-    Основная функция программы, которая запрашивает у пользователя путь к папке или файлу
-    и сжимает все найденные изображения в формат AVIF.
+    Функции для текстового документа
+    :param :
+    :return :
+    :raise :
+
     """
-
-    user_path = input("Введите путь к папке или файлу: ").strip('"')
-    images = get_image_paths(user_path, ALLOWED_EXTENSIONS)
-
-    for image in images:
-        compress_image(image, format="avif")
-
-if __name__ == "__main__":
-    main()
+    file = open(file_path, 'a', encoding=encoding)
+    file.writelines(data)
+    file.close()
