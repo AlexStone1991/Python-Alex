@@ -26,14 +26,12 @@ if __name__ == "__main__":
 name = __name__ # __main__
 print(name)
 
-# sk-or-vv-32acad84830483432df6bb1eb3114ede486fe620ba237c07f152b84c6a27e782
-
 # openai/gpt-4o-mini
 
 from openai import OpenAI
 
 client = OpenAI(
-    api_key="sk-or-vv-32acad84830483432df6bb1eb3114ede486fe620ba237c07f152b84c6a27e782", # ваш ключ в VseGPT после регистрации
+    api_key=, # ваш ключ в VseGPT после регистрации
     base_url="https://api.vsegpt.ru/v1",
 )
 """
