@@ -64,3 +64,18 @@ def get_image_paths(source_path: str, allowed_extensions: list[str]) -> list[str
                     images.append(full_path)
 
     return images
+
+def main() -> None:
+    """
+    Основная функция программы, которая запрашивает у пользователя путь к папке или файлу
+    и сжимает все найденные изображения в формат AVIF.
+    """
+
+    user_path = input("Введите путь к папке или файлу: ").strip('"')
+    images = get_image_paths(user_path, ALLOWED_EXTENSIONS)
+
+    for image in images:
+        compress_image(image, format="avif")
+
+if __name__ == "__main__":
+    main()
