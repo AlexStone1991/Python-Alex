@@ -76,8 +76,22 @@ back_data = json.loads(json_string) # возращает список слова
 with open("metallica_songs.json", "w", encoding="utf-8") as file: # encoding="utf=8" - указывать нужно всегда
     json.dump(metallica_songs, file, indent=4, ensure_ascii=False) # ensure_ascii=False - что б русские буквы читались!
 
-# Прочитаем
+# Дозапись
+# 1. Читаем
+with open("metallica_songs.json", "r", encoding="utf=8") as file:
+    data = json.load(file)
 
+# 2. Добавляем новые песни
+data.extend(new_data)
+
+# 3. Перезаписываем файл
+with open("metallica_songs.json", "w", encoding="utf-8") as file:
+    json.dump(data, file, indent=4, ensure_ascii=False)
+
+# 4. Проверяем
+# Прочитали
 with open("metallica_songs.json", "r", encoding="utf-8") as file:
     data = json.load(file)
+
+print(data)
 
