@@ -71,3 +71,11 @@ def append_txt(*data: str, file_path: str, encoding: str = "utf-8") -> None:
     """Добавляет данные в конец текстового файла."""
     with open(file_path, 'a', encoding=encoding) as file:
         file.write(' '.join(data))
+
+# Функция для работы с YAML
+# 10 Функция read_yaml
+def read_yaml(file_path: str) -> dict:
+    """Читает данные из YAML-файла."""
+    with open(file_path, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
