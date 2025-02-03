@@ -52,4 +52,22 @@ def append_csv(*data: dict, file_path: str, delimiter=';', encoding: str = 'utf-
         writer = csv.DictWriter(file, fieldnames=data[0].keys(), delimiter=delimiter)
         writer.writerows(data)
 
+# Функции для работы с TXT
+# 7 Функция read_txt
+def read_txt(file_path: str, encoding: str = "utf-8") -> str:
+    """Читает данные из текстового файла."""
+    with open(file_path, 'r', encoding=encoding) as file:
+        data = file.read()
+    return data
 
+# 8 Функция write_txt
+def write_txt(*data: str, file_path: str, encoding: str = "utf-8") -> None:
+    """Записывает данные в текстовый файл."""
+    with open(file_path, 'w', encoding=encoding) as file:
+        file.write(' '.join(data))
+
+# 9 Функция append_txt
+def append_txt(*data: str, file_path: str, encoding: str = "utf-8") -> None:
+    """Добавляет данные в конец текстового файла."""
+    with open(file_path, 'a', encoding=encoding) as file:
+        file.write(' '.join(data))
