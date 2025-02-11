@@ -47,3 +47,44 @@ print("Год как строка:", year_as_string[list(year_as_string.keys())[
 filtered_by_title = list(filter(lambda x: x["title"].startswith("Ч"), full_dict.values()))
 
 print("Фильмы, начинающиеся на 'Ч':", filtered_by_title)
+
+# Шаг 8: Сортировка по одному параметру
+# Сортируем full_dict по одному параметру, например, по году выпуска (year).
+
+# Сортировка по году выпуска
+sorted_by_year = dict(sorted(full_dict.items(), key=lambda x: x[1]["year"]))
+
+print("Сортировка по году выпуска:", sorted_by_year[list(sorted_by_year.keys())[0]])  # Выводим первый элемент для примера
+
+# Шаг 9: Сортировка по двум параметрам
+# Сортируем full_dict по двум параметрам, например, по году выпуска (year) и названию (title).
+
+# Сортировка по году выпуска и названию
+sorted_by_year_and_title = dict(sorted(full_dict.items(), key=lambda x: (x[1]["year"], x[1]["title"])))
+
+print("Сортировка по году и названию:", sorted_by_year_and_title[list(sorted_by_year_and_title.keys())[0]])
+
+# Шаг 10: Однострочник для фильтрации и сортировки
+# Используем filter и sorted в одной строке, чтобы отфильтровать и отсортировать full_dict.
+
+# Однострочник для фильтрации и сортировки
+filtered_and_sorted = dict(sorted(filter(lambda x: x[1]["year"] > 2000, full_dict.items()), key=lambda x: x[1]["title"]))
+
+print("Отфильтрованные и отсортированные фильмы:", filtered_and_sorted)
+
+# Шаг 11: Аннотация типов и проверка mypy
+# Добавляем аннотации типов и проверяем код с помощью mypy.
+
+from typing import Dict, List, Set, Any
+
+# Пример аннотации типов
+processed_input: List[int | None] = list(map(lambda x: int(x) if x.isdigit() else None, user_input.split()))
+unique_directors: Set[str] = {movie["director"] for movie in full_dict.values()}
+
+# Шаг 12: Красивый вывод с pprint
+# Используем pprint для красивого вывода результатов.
+
+from pprint import pprint
+
+print("\nРезультаты задания:")
+pprint(filtered_and_sorted)
