@@ -23,8 +23,8 @@ print("Уникальные режиссеры:", unique_directors)
 year_as_string = {key: {**value, "year": str(value["year"])} for key, value in full_dict.items()}
 print("Год как строка:", year_as_string[list(year_as_string.keys())[0]])
 
-# Шаг 7: Фильтрация фильмов, начинающихся на "Ч"
-filtered_by_title = list(filter(lambda x: x["title"].startswith("Ч"), full_dict.values()))
+# Шаг 7: Фильтрация фильмов, начинающихся на "Ч" (с проверкой на None)
+filtered_by_title = list(filter(lambda x: x["title"] is not None and x["title"].startswith("Ч"), full_dict.values()))
 print("Фильмы, начинающиеся на 'Ч':", filtered_by_title)
 
 # Шаг 8: Сортировка по году выпуска
