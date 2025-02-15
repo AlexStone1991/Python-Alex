@@ -11,5 +11,8 @@ class Person:
 p1 = Person() # <__main__.Person object at 0x00000271D2DE6E40>
 p2 = Person() # <__main__.Person object at 0x00000271D3064E10>
 
-print(p1, p2)
-print(type(p1), type(p2)) # <class '__main__.Person'> <class '__main__.Person'>
+p1.name = "Филлип"
+p2.name = "Джордж"
+
+print(p1.name, p2.name)
+
