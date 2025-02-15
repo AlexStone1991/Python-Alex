@@ -1,0 +1,7 @@
+.mypy_cache/
+build/
+dist/
+Domashka ot Vladimira/
+lesson - Python Vladimir/
+myenv/
+__pycache__/
