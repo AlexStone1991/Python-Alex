@@ -3,13 +3,14 @@
 #  -class
 # - нейминг классов UpperCamelCase
 
-
-
 class Person:
-    pass
+    # Атрибут класса
+    name = "Alexander"
 
-p1 = Person() # <__main__.Person object at 0x00000271D2DE6E40>
-p2 = Person() # <__main__.Person object at 0x00000271D3064E10>
+p1 = Person()
+p2 = Person() 
+
+print(p1.name, p2.name)
 
 p1.name = "Филлип"
 p2.name = "Джордж"
