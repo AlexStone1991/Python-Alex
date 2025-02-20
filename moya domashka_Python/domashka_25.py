@@ -55,6 +55,51 @@ class TxtFileHandler:
         except Exception as e:
             print(f"Ошибка при добавлении в файл: {e}")
 
+class CSVFileHandler:
+    def read_file(self, filepath: str) -> list[dict]:
+        """Читает CSV файл и возвращает список словарей."""
+        try:
+            with open(filepath, mode='r', newline='', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                return [row for row in reader]
+        except FileNotFoundError:
+            return []
+        except Exception as e:
+            print(f"Ошибка при чтении CSV файла: {e}")
+            return []
+
+    def write_file(self, filepath: str, data: list[dict]) -> None:
+        """Записывает список словарей в CSV файл."""
+        try:
+            with open(filepath, mode='w', newline='', encoding='utf-8') as file:
+                if not data:
+                    return
+                writer = csv.DictWriter(file, fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+        except Exception as e:
+            print(f"Ошибка при записи в CSV файл: {e}")
+
+    def append_file(self, filepath: str, data: list[dict]) -> None:
+        """Добавляет список словарей в конец CSV файла."""
+        try:
+            file_exists = True
+            try:
+                with open(filepath, mode='r', newline='', encoding='utf-8') as file:
+                    reader = csv.DictReader(file)
+                    headers = reader.fieldnames
+            except FileNotFoundError:
+                file_exists = False
+                headers = data[0].keys()
+
+            with open(filepath, mode='a', newline='', encoding='utf-8') as file:
+                writer = csv.DictWriter(file, fieldnames=headers)
+                if not file_exists:
+                    writer.writeheader()
+                writer.writerows(data)
+        except Exception as e:
+            print(f"Ошибка при добавлении в CSV файл: {e}")
+
 
 
 # Примеры использования
