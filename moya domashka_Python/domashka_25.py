@@ -100,7 +100,36 @@ class CSVFileHandler:
         except Exception as e:
             print(f"Ошибка при добавлении в CSV файл: {e}")
 
+class JSONFileHandler:
+    def read_file(self, filepath: str) -> list[dict]:
+        """Читает JSON файл и возвращает данные в виде списка словарей."""
+        try:
+            with open(filepath, 'r', encoding='utf-8') as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return []
+        except Exception as e:
+            print(f"Ошибка при чтении JSON файла: {e}")
+            return []
 
+    def write_file(self, filepath: str, data: list[dict]) -> None:
+        """Записывает список словарей в JSON файл."""
+        try:
+            with open(filepath, 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print(f"Ошибка при записи в JSON файл: {e}")
+
+    def append_file(self, filepath: str, data: list[dict]) -> None:
+        """Добавляет данные в JSON файл."""
+        try:
+            existing_data = self.read_file(filepath)
+            if not isinstance(existing_data, list):
+                existing_data = []
+            existing_data.extend(data)
+            self.write_file(filepath, existing_data)
+        except Exception as e:
+            print(f"Ошибка при добавлении в JSON файл: {e}")
 
 # Примеры использования
 
