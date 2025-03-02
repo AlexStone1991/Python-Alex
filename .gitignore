@@ -6,3 +6,4 @@ lesson - Python Vladimir/
 myenv/
 __pycache__/
 */*.spec
+settings.py
