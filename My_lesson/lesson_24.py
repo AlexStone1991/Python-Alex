@@ -10,81 +10,55 @@
 
 # https://pypi.org/project/tabulate/
 
-available_formats = [
-            "plain", "simple", "github", "grid", "simple_grid", 
-            "rounded_grid", "heavy_grid", "mixed_grid", "double_grid", 
-            "fancy_grid", "outline", "simple_outline", "rounded_outline", 
-            "heavy_outline", "mixed_outline", "double_outline", 
-            "fancy_outline", "pipe", "orgtbl", "asciidoc", "jira", 
-            "presto", "pretty", "psql", "rst", "mediawiki", 
-            "moinmoin", "youtrack", "html", "unsafehtml", 
-            "latex", "latex_raw", "latex_booktabs", "latex_longtable", 
-            "textile", "tsv"
-        ]
+import os
+from mistralai import Mistral
+from settings import APY_KEY
 
-from tabulate import tabulate
-from typing import List, Dict, Union, Any, Optional
+api_key = APY_KEY
+model = "mistral-large-latest"
 
-class TabulateTable:
-    
-    __awaitable_styles = [
-            "plain", "simple", "github", "grid", "simple_grid", 
-            "rounded_grid", "heavy_grid", "mixed_grid", "double_grid", 
-            "fancy_grid", "outline", "simple_outline", "rounded_outline", 
-            "heavy_outline", "mixed_outline", "double_outline", 
-            "fancy_outline", "pipe", "orgtbl", "asciidoc", "jira", 
-            "presto", "pretty", "psql", "rst", "mediawiki", 
-            "moinmoin", "youtrack", "html", "unsafehtml", 
-            "latex", "latex_raw", "latex_booktabs", "latex_longtable", 
-            "textile", "tsv"
-        ]
-    def __init__(self):
-        self.__data: Union[List[Dict[str, Any]], List[List[Any]]] = []
-        self.__style: str = "pretty"
-        self.__headers: Optional[List[str]] = None
-        self.__tupe_data: Optional[str] = None
-    
+# client = Mistral(api_key=api_key)
+
+# chat_response = client.chat.complete(
+#     model= model,
+#     messages = [
+#         {
+#             "role": "user",
+#             "content": "Напиши веселый текст для песни",
+#         },
+#     ]
+# )
+# print(chat_response.choices[0].message.content)
+
+class MistralAIchat:
+    def __init__(self, api_key: str, model: str, system_role: str):
+        self.api_key = api_key
+        self.__model = model
+        self.system_role = system_role
+        self.client = Mistral(api_key=api_key)
+
+    def __validate_model(self, model: str):
+        if model not in self.MODELS:
+            raise ValueError(f"некореткая модель: {model}. доступная модель {self.MODELS}")
+        return model
     @property
-    def style(self):
-        return self.__style
-    
-    @style.setter
-    def style(self, style: str):
-        if style in self.__awaitable_styles:
-            self.__style = style
-        else:
-            raise ValueError(f"такого стиля нет. Выберите из {self.__awaitable_styles}")
-    @property
-    def data(self) -> List[Dict[str, Any]] | List[List[Any]]:
-        return self.__data
-    @data.setter
-    def data(self, data: Union[List[Dict[str, Any]], List[List[Any]]]):
-        self.__type_data = self.__validate_data(data)
-        self.__data = data
-        
-    def __validate_data(self, data: Union[List[Dict[str, Any]], List[List[Any]]]):
-        if isinstance(data[0], dict):
-            return "dicts"
-        elif isinstance(data[0], list):
-            return "lists"
-        else:
-            raise ValueError("данные должны быть списками словарей или списками значений")
-        
-    def render(self) -> str:
-        if self.__type_data == "dicts":
-            return tabulate(self.__data, headers="keys", tablefmt=self.__style)
-        elif self.__type_data == "lists":
-            return tabulate(self.__data, tablefmt=self.__style)
-        else:
-            raise ValueError("неверные данные для рендеринга таблицы")
-        
-if __name__ == "__main__":
-    table = TabulateTable()
-    table.data = [
-        {"name": "John", "age": 25},
-        {"name": "Alice", "age": 30},
-    ]
-    table.style = "github"
-    print(table.render())
+    def model(self):
+        return self.__model
+    @model.setter
+    def model(self, model: str):
+        self.__model = self.__validate_model(model)
 
+    def text_coplection(self, prompt: str):
+        response = self.client.chat.complete(
+            model = self.model,
+            messages = [
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ]
+        )
+        return response.choices[0].message.content  
     
+chat = MistralAIchat(api_key=api_key, model="mistral-small-latest", system_role="Ты банан")
+print(chat.text_coplection("Напиши обычный анекдот"))
