@@ -7,3 +7,4 @@ myenv/
 __pycache__/
 */*.spec
 settings.py
+.env
