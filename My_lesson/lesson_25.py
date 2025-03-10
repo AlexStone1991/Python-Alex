@@ -199,24 +199,12 @@ class AiChat():
         return f"Отправляю сообщение: {self.message} {additional_message}"
     
 class ImageAiChat(AiChat):
-    pass
+    def send_message(self, additional_message = ""):
+        result = AiChat.send_message(self, additional_message)
+        return f"{result} и еще какой то текст"
 
 class MistralAiChat(AiChat):
     pass
 
-ai_chat = AiChat()
-print(ai_chat)
 image_ai_chat = ImageAiChat()
-print(image_ai_chat)
-mistral_ai_chat = MistralAiChat()
-print(mistral_ai_chat)
-
-print(type(ai_chat))
-print(type(mistral_ai_chat))
-print(type(image_ai_chat))
-
-print(isinstance(ai_chat, AiChat))
-print(isinstance(image_ai_chat, AiChat))
-print(isinstance(mistral_ai_chat, AiChat))
-
-print(ImageAiChat.__mro__)
+print(image_ai_chat.send_message("Привет"))

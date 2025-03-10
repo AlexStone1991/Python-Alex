@@ -12,9 +12,9 @@
 
 import os
 from mistralai import Mistral
-from settings import APY_KEY
+from settings import MISTRAL_APY_KEY
 
-api_key = APY_KEY
+api_key = MISTRAL_APY_KEY
 model = "mistral-large-latest"
 
 # client = Mistral(api_key=api_key)
