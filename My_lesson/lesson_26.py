@@ -60,3 +60,11 @@ print(cat.voice())
 print(Dog.__mro__)
 
 # (<class "__main__.Dog">, <class "__main__.Animal">, <class "object">)
+
+# Type vs Isinstance
+# Type - проверяет тип обьекта
+# Isinstance -проверяет принадлежность обьекта к классу
+
+print(type(dog))  # True
+print(isinstance(dog, Dog))  # True
+print(isinstance(dog, Animal))  # True
