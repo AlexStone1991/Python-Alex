@@ -17,6 +17,9 @@
 class Animal:
     def __init__(self, name: str):
         self.name = name
+
+    def __str__(self):
+        return f'{self.__class__.__name__} по имени {self.name}'
     def voice(self):
         return f"{self.__class__.__name__} по имени {self.name} издал(а) звук"
 
@@ -49,3 +52,11 @@ cat = Cat("Мурка", 5)
 
 print(dog.voice())  # Вызовет метод voice из Dog
 print(cat.voice())
+
+# MRO - Method Resolution Order - порядок разрешения методов
+# Порядок разрешения методов это порядок в котором Python ищет в иерархии наследованимя
+
+# Получим этот для Dog
+print(Dog.__mro__)
+
+# (<class "__main__.Dog">, <class "__main__.Animal">, <class "object">)
