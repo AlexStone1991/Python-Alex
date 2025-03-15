@@ -10,61 +10,116 @@
 # Вызов методов родительского класса
 # Super
 # работа с инцилизаторами
+# Модуль ABC - Abstract base classes
+# Декаратор @abstractmethod
 
-# 1. Концепция наследования
-# Наследование это механизм, который позволяет создать новы класс на основе уже существующего.
+from abc import ABC, abstractmethod
 
-class Animal:
-    def __init__(self, name: str):
-        self.name = name
+# class AbstractDocument(ABC):
+#     def __init__(self, file_path: str, encoding:str="utf-8"):
+#         self.file_path = file_path
+#         self.encoding = encoding
 
-    def __str__(self):
-        return f'{self.__class__.__name__} по имени {self.name}'
-    def voice(self):
-        return f"{self.__class__.__name__} по имени {self.name} издал(а) звук"
+#     @abstractmethod
+#     def read(self):
+#         pass
+    
+#     @abstractmethod
+#     def write(self):
+#         pass
 
-class Dog(Animal):
-    # пайтон ищет методо у собственного класса
-    # тут мы переопределяем методо voice( у класса Dog)
-    # теперь будети вызываться метод voice у класса dog а не у класса animal
-    def voice(self):
-        # result = Animal.voice(self)
-        result = super().voice()  # вызовет родительский метод voice у Animal
-        return f"{result}, это было сделано собакой"
+#     @abstractmethod
+#     def append(self):
+#         pass
+
+#     def __str__(self):
+#         return f"Документ типа {self.__class__.__name__} по пути {self.file_path}"
+    
+# class TextDocument(AbstractDocument):
+#     def read(self)-> list[str]:
+#         with open(self.file_path, "r", encoding=self.encoding) as file:
+#             clear_data = [string.strip() for string in file.readlines()]
+#             return clear_data
+#     def write(self) -> None:
+#         with open(self.file_path, "w", encoding=self.encoding) as file:
+#             write_data = "\n".join(data)
+#             file.write(write_data)
+#     def append(self, *data: str) -> None:
+#         with open(self.file_path, "a", encoding=self.encoding) as file:
+#             write_data = "\n".join(data)
+#             file.write(write_data)
+
+# document = TextDocument("test.txt")
+# document.write("Привет", "Мир")
+# print(document.read())
+
+# Иерархическое наследование - когда один класс наследует от нескольких классов
+# Множественное наследование - когда один класс наследует от нескольких класс
+
+class A:
+    def __init__(self, a_param: str):
+        self.a_param = a_param
+
+    def method_a(self):
+        print("Method A" + self.a_param)
+
+class B(A):
+    def __init__(self, a_param: str, b_param: str):
+        super().__init__(a_param)
+        self.b_param = b_param
+
+    def method_b(self):
+        print("Method B" + self.b_param)
+
+class C(B):
+    def __init__(self, a_param: str, b_param: str, c_param: str):
+        super().__init__(a_param, b_param)
+        self.c_param = c_param
+
+    def method_c(self):
+        print("Method C")
+
+c = C("A", "B", "C")
+
+c.method_a()
+c.method_b()
+c.method_c()
+
+# Бабка - Жучка - Внучка - Репка
+
+# Репка - базовый класс
+
+# class Repka:
+#     def __init__(self, weight):
+#         self.weight = weight
+
+#     def __str__(self):
+#         return f'Репка весом {self.weight} кг'
+
+#     def pull(self):
+#         print('Тянут репку')
 
 
-class Cat(Animal):
-    def __init__(self, name: str, fluffy_level: int):
-        super().__init__(name)
-        self.fluffy_level = self.__fluffy_validator(fluffy_level)
+# # Бабка - класс наследник от Репка
+# class Babka(Repka):
+#     def __init__(self, weight, name):
+#         super().__init__(weight)
+#         self.name = name
 
-    def voice(self):
-        return f"{super().voice()} и это было сделано кошкой, и уровень пушистости {self.fluffy_level}"
+#     def __str__(self):
+#         return f'Бабка {self.name} весом {self.weight} кг'
 
-    def __fluffy_validator(self, fluffy_level):
-        if not 0 <= fluffy_level <= 10:
-            raise ValueError("Fluffy level should be between 0 and 10")
-        else:
-            return fluffy_level
+#     def pull(self):
+#         print('Бабка тянет репку')
 
-dog = Dog("Шарик")
-cat = Cat("Мурка", 5)
+# # Жучка - класс наследник от Репка
+# class Zhuchka(Repka):
+#     def __init__(self, weight, name):
+#         super().__init__(weight)
+#         self.name = name
 
-print(dog.voice())  # Вызовет метод voice из Dog
-print(cat.voice())
+#     def __str__(self):
+#         return f'Жучка {self.name} весом {self.weight} кг'
 
-# MRO - Method Resolution Order - порядок разрешения методов
-# Порядок разрешения методов это порядок в котором Python ищет в иерархии наследованимя
-
-# Получим этот для Dog
-print(Dog.__mro__)
-
-# (<class "__main__.Dog">, <class "__main__.Animal">, <class "object">)
-
-# Type vs Isinstance
-# Type - проверяет тип обьекта
-# Isinstance -проверяет принадлежность обьекта к классу
-
-print(type(dog))  # True
-print(isinstance(dog, Dog))  # True
-print(isinstance(dog, Animal))  # True
+#     def pull(self):
+#         print('Жучка тянет репку')
