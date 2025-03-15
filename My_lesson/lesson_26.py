@@ -11,17 +11,21 @@
 # Наследование это механизм, который позволяет создать новы класс на основе уже существующего.
 
 class Animal:
+    def __init__(self, name: str):
+        self.name = name
     def voice(self):
-        print(f"{self.__class__.__name__} издало звук")
+        print(f"{self.__class__.__name__} по имени {self.name} издал(а) звук")
 
 class Dog(Animal):
-    pass
+    def voice(self):
+        print(f"{self.__class__.__name__} по имени {self.name} начал(а) лаять")
 
 class Cat(Animal):
-    pass
+    def voice(self):
+        return super()
 
-dog = Dog()
-cat = Cat()
+dog = Dog("Шарик")
+cat = Cat("Барсик")
 
 dog.voice()  # Вызовет метод voice из Dog
 cat.voice()
