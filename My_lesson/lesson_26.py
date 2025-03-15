@@ -4,7 +4,7 @@
 # Как называются родиьельсие классы и наследники
 # - Базовый класс и производный класс
 # - Родительсукий класс
-# - super 
+# - Superclass и subclass
 # преопрелделение методов
 # расширение методов
 # Вызов методов родительского класса
@@ -31,10 +31,21 @@ class Dog(Animal):
 
 
 class Cat(Animal):
-    pass
+    def __init__(self, name: str, fluffy_level: int):
+        super().__init__(name)
+        self.fluffy_level = self.__fluffy_validator(fluffy_level)
+
+    def voice(self):
+        return f"{super().voice()} и это было сделано кошкой, и уровень пушистости {self.fluffy_level}"
+
+    def __fluffy_validator(self, fluffy_level):
+        if not 0 <= fluffy_level <= 10:
+            raise ValueError("Fluffy level should be between 0 and 10")
+        else:
+            return fluffy_level
 
 dog = Dog("Шарик")
-cat = Cat("Барсик")
+cat = Cat("Мурка", 5)
 
 print(dog.voice())  # Вызовет метод voice из Dog
 print(cat.voice())
