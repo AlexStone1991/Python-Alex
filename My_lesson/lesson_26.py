@@ -1,6 +1,10 @@
 # TODO ООП Ч5. Наследование. Abstractmethod. Super. Переопределение и расширение. Урок 26
 
 # концепция наследования
+# Как называются родиьельсие классы и наследники
+# - Базовый класс и производный класс
+# - Родительсукий класс
+# - super 
 # преопрелделение методов
 # расширение методов
 # Вызов методов родительского класса
@@ -14,18 +18,23 @@ class Animal:
     def __init__(self, name: str):
         self.name = name
     def voice(self):
-        print(f"{self.__class__.__name__} по имени {self.name} издал(а) звук")
+        return f"{self.__class__.__name__} по имени {self.name} издал(а) звук"
 
 class Dog(Animal):
+    # пайтон ищет методо у собственного класса
+    # тут мы переопределяем методо voice( у класса Dog)
+    # теперь будети вызываться метод voice у класса dog а не у класса animal
     def voice(self):
-        print(f"{self.__class__.__name__} по имени {self.name} начал(а) лаять")
+        # result = Animal.voice(self)
+        result = super().voice()  # вызовет родительский метод voice у Animal
+        return f"{result}, это было сделано собакой"
+
 
 class Cat(Animal):
-    def voice(self):
-        return super()
+    pass
 
 dog = Dog("Шарик")
 cat = Cat("Барсик")
 
-dog.voice()  # Вызовет метод voice из Dog
-cat.voice()
+print(dog.voice())  # Вызовет метод voice из Dog
+print(cat.voice())
