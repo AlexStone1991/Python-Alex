@@ -12,7 +12,9 @@ class Pie:
 class CheeseBorderMixin:
     def add_cheese_border(self, height: int = 10):
         self.height = height
-        print(f"Сырный борт, высотой {self.height} мм Активирован!")
+        result = f"Сырный борт, высотой {self.height} мм Активирован!"
+        print(result)
+        return result
 
 class ThinkCrustMixin:
     def add_thin_crust(self, thickness: int = 1):
