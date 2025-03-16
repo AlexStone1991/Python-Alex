@@ -2,37 +2,28 @@
 
 
 class Pizza:
-    def __init__(self, **kwargs):
-        self.size = kwargs.pop('size', 30)
-        super().__init__(**kwargs)
+    def __init__(self, size: int):
+        self.size = size
 
 class Pie:
-    def __init__(self, **kwargs):
-        self.size = kwargs.pop('size', 30)
-        super().__init__(**kwargs)
+    def __init__(self, size: int):
+        self.size = size
 
 class CheeseBorderMixin:
-    def __init__(self, **kwargs):
-        self.height = kwargs.pop('height', 10)
-        super().__init__(**kwargs)
-    def add_cheese_border(self):
+    def add_cheese_border(self, height: int = 10):
+        self.height = height
         print(f"Сырный борт, высотой {self.height} мм Активирован!")
 
 class ThinkCrustMixin:
-    def __init__(self, **kwargs):
-        self.thickness = kwargs.pop('thickness', 1)
-    def add_thin_crust(self):
+    def add_thin_crust(self, thickness: int = 1):
+        self.thickness =thickness
         print(f"Тонкое тексто, толщиной {self.thickness} мм Активировано!")
 # Пицца с сырным бортом
-class CheeseBorderPizza(Pizza, CheeseBorderMixin):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.add_cheese_border()
-# тест
-print("Пицца с сырным бортом")
-pizza = CheeseBorderPizza(size=40, height=20)
-print(pizza.size)
-print(pizza.height)
-print(pizza.__dict__)
-print(CheeseBorderPizza.__mro__)
 
+class CheeseBorderPizza(Pizza, CheeseBorderMixin):
+    def __init__(self, size: int, height: int = 10):
+        super().__init__(size)
+        self.add_cheese_border(height)
+# тест
+cbp = CheeseBorderPizza(30)
+print(cbp.size)
