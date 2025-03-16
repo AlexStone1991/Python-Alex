@@ -57,33 +57,18 @@ from abc import ABC, abstractmethod
 # Множественное наследование - когда один класс наследует от нескольких класс
 
 class A:
-    def __init__(self, a_param: str):
-        self.a_param = a_param
-
     def method_a(self):
-        print("Method A" + self.a_param)
+        print('Метод A')
 
-class B(A):
-    def __init__(self, a_param: str, b_param: str):
-        super().__init__(a_param)
-        self.b_param = b_param
-
+class B:
     def method_b(self):
-        print("Method B" + self.b_param)
+        print('Метод B')
 
-class C(B):
-    def __init__(self, a_param: str, b_param: str, c_param: str):
-        super().__init__(a_param, b_param)
-        self.c_param = c_param
-
+class C(A, B):
     def method_c(self):
-        print("Method C")
+        print('Метод C')
 
-c = C("A", "B", "C")
-
-c.method_a()
-c.method_b()
-c.method_c()
+print(C.__mro__)
 
 # Бабка - Жучка - Внучка - Репка
 
