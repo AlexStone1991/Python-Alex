@@ -15,4 +15,29 @@ class AbstractFile(ABC):
     def append(self, data):
         pass
 
+class JsonFile(AbstractFile):
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def read(self):
+        with open(self.file_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
+
+    def write(self, data):
+        with open(self.file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+
+    def append(self, data):
+        try:
+            existing_data = self.read()
+        except FileNotFoundError:
+            existing_data = []
+
+        if isinstance(existing_data, list):
+            existing_data.append(data)
+        else:
+            raise ValueError("Existing data is not a list")
+
+        self.write(existing_data)
+
 
