@@ -11,12 +11,16 @@ class Pie:
         self.size = size
 
 class CheeseBorderMixin:
+    def __init__(self, height: int):
+        self.height = height
     def add_cheese_border(self):
-        print("Сырный борт Активирован!")
+        print(f"Сырный борт, высотой {self.height} мм Активирован!")
 
 class ThinkCrustMixin:
+    def __init__(self, thickness: int):
+        self.thickness = thickness
     def add_thin_crust(self):
-        print("Тонкое тексто Активировано!")
+        print(f"Тонкое тексто, толщиной {self.thickness} мм Активировано!")
 
 # 1 нам нужна Пицца Делаем экземплят класса Pizza
 # pizza = Pizza(30)
@@ -24,18 +28,6 @@ class ThinkCrustMixin:
 # 2 нам нужна мутация - пицца с сырным бортом делаем экземпляр класса PizzaCheeseBorder
 
 class PizzaWithCheeseBorder(Pizza, CheeseBorderMixin):
-    def __init__(self, size: int):
-        super().__init__(size)
-        self.add_cheese_border()
-
-# пирог с сырным бортом и тонким тестом
-
-class PieCheeseBorderThinCrust(Pie, CheeseBorderMixin, ThinkCrustMixin):
-    def __init__(self, size: int):
-        super().__init__(size)
-        
-
-p = PieCheeseBorderThinCrust(30)
-print(p.size)
-p.add_cheese_border()
-p.add_thin_crust()
+    def __init__(self, size: int, height: int):
+        Pizza.__init__(self, size)
+        CheeseBorderMixin.__init__(self, height)
