@@ -322,3 +322,59 @@ pprint(players[:3])
 
 active_players = [player for player in players if player]
 pprint(active_players)
+print()
+print("====================================================")
+print()
+# =========================================================
+from dataclasses import dataclass
+
+# class Person:
+#     def __init__(self, name, age):
+#         self.name = name
+#         self.age = age
+
+# ivan = Person("Ivan", 20)
+# print(f"Name: {ivan.name}, Age: {ivan.age}")
+
+# @dataclass
+# class Person:
+#     name: str
+#     age: int
+# ivan = Person("Ivan", 20)
+# print(f"Name: {ivan.name}, Age: {ivan.age}")
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def __repr__(self):
+        return f"Person(name='{self.name}', age={self.age})"
+    def __eq__(self, other):
+        if other.__class__ is self.__class__:
+            return self.name == other.name and self.age == other.age
+        return NotImplemented
+    
+@dataclass
+class Person1:
+    name: str
+    age: int
+boris = Person("Boris", 30)
+nick = Person("Nick", 40)
+peter = Person("Peter", 30)
+borya = Person("Boris", 30)
+print(boris == borya)
+print(boris == peter)
+print(boris == nick)
+print(peter == nick)
+print(boris)
+
+boris1 = Person1("Boris", 30)
+nick1 = Person1("Nick", 40)
+peter1 = Person1("Peter", 30)
+borya1 = Person1("Boris", 30)
+
+print(boris1 == borya1)
+print(boris1 == peter1)
+print(boris1 == nick1)
+print(peter1 == nick1)
+print(boris1)
