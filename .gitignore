@@ -10,3 +10,4 @@ settings.py
 .env
 .md
 */*.md
+Diogram/
