@@ -82,26 +82,72 @@ class PostgreSQLConnectionFactory(AbstractSQLConnectionFactory):
         return PostgreSQLWindowFunction()
     
 # пример использования
-def main():
-    # Словарь фабрик подключений
-    factories = {
-        "sqlite": SQLiteConnectionFactory,
-        "postgresql": PostgreSQLConnectionFactory
-    }
-    # выболр фабрики подключения
-    choise = input("Выберите тип БД (sqlite/postgresql): ").strip().lower()
-    factory = factories.get(choise)
-    if not factory:
-        print("Неправильный выбор БД")
-        return
-    # создание фабрики подключения
-    connection_factory = factory()
-    simple_query = connection_factory.create_simple_query()
-    window_function = connection_factory.create_window_function()
-    # выполнение простого SQL
-    simple_query.execute()
-    # выполнение оконной функции SQL
-    window_function.execute_window_function()
+# def main():
+#     # Словарь фабрик подключений
+#     factories = {
+#         "sqlite": SQLiteConnectionFactory,
+#         "postgresql": PostgreSQLConnectionFactory
+#     }
+#     # выболр фабрики подключения
+#     choise = input("Выберите тип БД (sqlite/postgresql): ").strip().lower()
+#     factory = factories.get(choise)
+#     if not factory:
+#         print("Неправильный выбор БД")
+#         return
+#     # создание фабрики подключения
+#     connection_factory = factory()
+#     simple_query = connection_factory.create_simple_query()
+#     window_function = connection_factory.create_window_function()
+#     # выполнение простого SQL
+#     simple_query.execute()
+#     # выполнение оконной функции SQL
+#     window_function.execute_window_function()
 
+# if __name__ == "__main__":
+#     main()
+
+# =====================================Паттерны Прокси (Proxy)=================================
+
+"""
+Класс - Абстрактный запрос к ИИ
+Класс - Прокси запрос к ИИ
+Класс - Реальный запрос к ИИ
+Класс проверки "Токенов"
+Класс логгер
+"""
+
+class AbstractAIRequest(ABC):
+    @abstractmethod
+    def request(self, prompt: str) -> str:
+        pass
+
+class RealAIRequest(AbstractAIRequest):
+    def request(self, prompt: str) -> str:
+        return f"Реальный запрос к ИИ: {prompt}"
+    
+class CheckTokens:
+    max_tokens = 200_000
+    def check_tokens(self, tokens: int) -> bool:
+        if tokens > self.max_tokens:
+            print(f"Превышено количество токенов: {tokens} > {self.max_tokens}")
+            return False
+        return True
+    
+class ProxyAIRequest(AbstractAIRequest):
+    def __init__(self):
+        self.real_request = RealAIRequest()
+        self.check_tokens = CheckTokens()
+
+    def request(self, prompt: str) -> str:
+        tokens = len(prompt)
+        if self.check_tokens.check_tokens(tokens):
+            print(f'прокси количество токенов: {tokens} для  запроса: {prompt}')
+            return self.real_request.request(prompt)
+        else:
+            return "Превышено количество токенов"
+        
 if __name__ == "__main__":
-    main()
+    proxy_request = ProxyAIRequest()
+    prompt = "Какой чудесный день! Какой чудесный пень!"
+    response = proxy_request.request(prompt)
+    print(response)
