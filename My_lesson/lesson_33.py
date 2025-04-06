@@ -146,8 +146,69 @@ class ProxyAIRequest(AbstractAIRequest):
         else:
             return "Превышено количество токенов"
         
+# if __name__ == "__main__":
+#     proxy_request = ProxyAIRequest()
+#     prompt = "Какой чудесный день! Какой чудесный пень!"
+#     response = proxy_request.request(prompt)
+#     print(response)
+
+class YandexPaymentSystem:
+    def yandex_payment(self, amount: float) -> str:
+        return f"Оплата успешна {amount} рублей через Yandex"
+    
+class RobokassaPaymentSystem:
+    def robokassa_payment(self, amount: float, currency: str) -> str:
+        return f"Оплата успешна {amount} {currency} через Robokassa"
+    
+class AbstractPaymentSystem(ABC):
+    @abstractmethod
+    def pay(self, amount: float) -> str:
+        pass
+
+class YandexPaymentAdapter(AbstractPaymentSystem):
+    def __init__(self, yandex_payment_system: YandexPaymentSystem):
+        self.yandex_payment_system = yandex_payment_system
+    def pay(self, amount: float) -> str:
+        return self.yandex_payment_system.yandex_payment(amount)
+    
+class RobokassaPaymentAdapter(AbstractPaymentSystem):
+        available_currencies = ["RUB", "USD", "EUR"]
+        def __init__(self, robokassa_payment_system: RobokassaPaymentSystem):
+            self.robokassa_payment_system = robokassa_payment_system
+        def __validate_currency(self, currency: str) -> bool:
+            return currency in self.available_currencies
+        
+        def pay(self, amount: float) -> str:
+            currency_input = input("Введите валюту (RUB, USD, EUR): ")
+
+            if not self.__validate_currency(currency_input):
+                raise ValueError(f"валюта: {currency_input} недоступна. Доступныу валюты {', '.join(self.available_currencies)}")
+            return self.robokassa_payment_system.robokassa_payment(amount, currency_input)
+        
+class PaymentFacade:
+    def __init__(self):
+        self.yandex_payment_system = YandexPaymentSystem()
+        self.robokassa_payment_system = RobokassaPaymentSystem()
+        self.yandex_adapter = YandexPaymentAdapter(self.yandex_payment_system)
+        self.robokassa_adapter = RobokassaPaymentAdapter(self.robokassa_payment_system)
+
+    def pay_with_yandex(self, amount: float) -> str:
+        return self.yandex_adapter.pay(amount)
+    def pay_with_robokassa(self, amount: float) -> str:
+        return self.robokassa_adapter.pay(amount)
+    
+    def __call__(self, amount: float, payment_system: str) -> str:
+        if payment_system == "yandex":
+            return self.pay_with_yandex(amount)
+        elif payment_system == "robokassa":
+            return self.pay_with_robokassa(amount)
+        else:
+            raise ValueError("Неправильный выбор платежной системы")
+
 if __name__ == "__main__":
-    proxy_request = ProxyAIRequest()
-    prompt = "Какой чудесный день! Какой чудесный пень!"
-    response = proxy_request.request(prompt)
-    print(response)
+    payment_facade = PaymentFacade()
+    try:
+        print(payment_facade(1000, "yandex"))
+        print(payment_facade(2000, "robokassa"))
+    except ValueError as e:
+        print(e)
