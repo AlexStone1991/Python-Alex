@@ -11,3 +11,4 @@ settings.py
 .md
 */*.md
 Diogram/
+Data/
