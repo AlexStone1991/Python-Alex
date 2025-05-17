@@ -206,3 +206,52 @@ JOIN Groups AS g ON s.group_id = g.id;
 SELECT s.first_name, s.last_name, g.group_name
 FROM Students AS s
 LEFT JOIN Groups AS g ON s.group_id = g.id;
+
+-- 1 Название всех групп где перпод Микросервисный
+-- 2 К первому запросу добавить GROUP_CONCAT что бы группы выводились в одной строке
+-- 3 К запросу 2 добавить выборку по еще одному перподу - Питонья чтобы получить 2 строки в выводе
+-- 4 Перепишите запрос 3 так, чтобы получить не группы, а всех студентов через запятую для этих преподавателей
+
+SELECT t.last_name, g.group_name
+FROM Teachers AS t
+JOIN TeacherGroups AS tg ON t.id = tg.teacher_id
+JOIN Groups AS g ON tg.group_id = g.id
+WHERE t.last_name = 'Микросервисный';
+
+SELECT t.last_name, GROUP_CONCAT(g.group_name) AS groups
+FROM Teachers AS t
+JOIN TeacherGroups AS tg ON t.id = tg.teacher_id
+JOIN Groups AS g ON tg.group_id = g.id
+WHERE t.last_name = 'Микросервисный'
+GROUP BY t.last_name;
+
+SELECT t.last_name, GROUP_CONCAT(g.group_name) AS groups
+FROM Teachers AS t
+JOIN TeacherGroups AS tg ON t.id = tg.teacher_id
+JOIN Groups AS g ON tg.group_id = g.id
+WHERE t.last_name IN ('Микросервисный', 'Питонья')
+GROUP BY t.last_name;
+
+SELECT t.last_name, GROUP_CONCAT(s.last_name) AS students
+FROM Teachers AS t
+JOIN TeacherGroups AS tg ON t.id = tg.teacher_id
+JOIN Groups AS g ON tg.group_id = g.id
+JOIN Students AS s ON g.id = s.group_id
+WHERE t.last_name IN ('Микросервисный', 'Питонья')
+GROUP BY t.last_name;
+
+-- Синтаксис транзакций
+
+--  для начал транзакции мы испольнуем BEGIN, BEGIN TRANSACTION
+
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS Students;
+
+SELECT * FROM Students;
+
+-- откат
+ROLLBACK;
+
+-- Коммит
+COMMIT;
