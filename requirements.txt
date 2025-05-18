@@ -4,3 +4,15 @@ tabulate
 mistralai
 python-dotenv
 pydantic
+moviepy
+pytube
+pytubefix
+
+# .\.venv\Scripts\activate - активирует виртуальное окружение
+# pip install -r requirements.txt - устанавливает все зависимости из файла requirements.txt
+# python main.py - запускает программу
+# python -m pip install --upgrade pip - обновляет pip
+# pip install --upgrade pip - обновляет pip
+# pip install moviepy
+# pip install moviepy pytubefix
+# git push origin main - отправляет изменения в репозиторий
