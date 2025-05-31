@@ -156,5 +156,37 @@ class HangmanGame:
 words_list = ["яблоко", "банан", "апельсин", "груша", "арбуз", "виноград", "мандарин", "киви", "персик", "слива"]
 
 # ==================================Запуск игры=================================
-game = HangmanGame(words_list)
-game.play()
+# game = HangmanGame(words_list)
+# game.play()
+
+def numbers_to_words(numbers):
+    words = []
+    for num in numbers:
+        if num == 0:
+            words.append("ноль")
+        elif num == 1:
+            words.append("один")
+        elif num == 2:
+            words.append("два")
+        elif num == 3:
+            words.append("три")
+        elif num == 4:
+            words.append("четыре")
+        elif num == 5:
+            words.append("пять")
+        elif num == 6:
+            words.append("шесть")
+        elif num == 7:
+            words.append("семь")
+        elif num == 8:
+            words.append("восемь")
+        elif num == 9:
+            words.append("девять")
+        else:
+            words.append("неизвестное число")
+    return words
+
+# Пример использования:
+numbers = [int(num) for num in input("Введите числа через запятую: ").split(",")]
+result = numbers_to_words(numbers)
+print(result)
