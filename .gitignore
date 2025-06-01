@@ -12,3 +12,4 @@ settings.py
 */*.md
 Diogram/
 Data/
+*/*.db
