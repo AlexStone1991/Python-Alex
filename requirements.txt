@@ -7,6 +7,8 @@ pydantic
 moviepy
 pytube
 pytubefix
+peewee
+flask
 
 # .\.venv\Scripts\activate - активирует виртуальное окружение
 # pip install -r requirements.txt - устанавливает все зависимости из файла requirements.txt
@@ -16,3 +18,7 @@ pytubefix
 # pip install moviepy
 # pip install moviepy pytubefix
 # git push origin main - отправляет изменения в репозиторий
+# pip install peewee  
+# pip install flask
+# git fetch - обновляет репозиторий
+# python -m venv .venv - создает виртуальное окружение
