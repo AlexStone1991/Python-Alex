@@ -9,6 +9,8 @@ pytube
 pytubefix
 peewee
 flask
+pyTelegramBotAPI
+python-telegram-bot
 
 # .\.venv\Scripts\activate - активирует виртуальное окружение
 # pip install -r requirements.txt - устанавливает все зависимости из файла requirements.txt
@@ -22,3 +24,7 @@ flask
 # pip install flask
 # git fetch - обновляет репозиторий
 # python -m venv .venv - создает виртуальное окружение
+# pip install pyTelegramBotAPI - устанавливает библиотеку pyTelegramBotAPI
+# pip install python-telegram-bot - телеграмм бот
+
+

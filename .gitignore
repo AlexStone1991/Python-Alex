@@ -13,3 +13,4 @@ settings.py
 Diogram/
 Data/
 */*.db
+.db
