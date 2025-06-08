@@ -11,6 +11,7 @@ peewee
 flask
 pyTelegramBotAPI
 python-telegram-bot
+flask_restx
 
 # .\.venv\Scripts\activate - активирует виртуальное окружение
 # pip install -r requirements.txt - устанавливает все зависимости из файла requirements.txt
@@ -26,5 +27,6 @@ python-telegram-bot
 # python -m venv .venv - создает виртуальное окружение
 # pip install pyTelegramBotAPI - устанавливает библиотеку pyTelegramBotAPI
 # pip install python-telegram-bot - телеграмм бот
+# pip install flask_restx - 
 
 
