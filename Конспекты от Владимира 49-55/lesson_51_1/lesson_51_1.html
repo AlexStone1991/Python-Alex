@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lesson_51_1</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/tomorrow-night-bright.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link rel="stylesheet" href="./assets/css/default.css" />
+    <link rel="stylesheet" href="./assets/css/parallax.css" />
+  </head>
+  <body>
+    <div class="container-fluid px-4">
+      <div class="row gx-5">
+        <div class="col-lg-3 d-none d-lg-block">
+          <nav id="table-of-contents" class="sticky-top pt-4">
+            <!-- Здесь будет автоматически сгенерированное оглавление -->
+          </nav>
+        </div>
+        <div class="col-lg-8">
+          <div class="content-wrapper mt-5">
+            <!-- Опциональный блок брендирования.
+                 Если переменная ./django_logo.jpg не пуста, то в инлайн-стиле подставляем путь к изображению. -->
+            <div class="branding-header" style="background-image: url('./django_logo.jpg');"></div>
+            <h1 class="display-4 text-center my-4">lesson_51_1</h1>
+            <h1>Тема Django. MTV. Знакомство с Шаблонизатором и маршрутизацией. Урок 51 🚀</h1>
+<h2>Маршрутизация в Django: где находятся URLs и как работают конвертеры путей 🔗</h2>
+<p>Маршрутизация в Django - это процесс определения того, как URL-адреса сопоставляются с представлениями. В Django маршруты определяются в файле <code>urls.py</code> с помощью списка <code>urlpatterns</code>. </p>
+<p>Конвертеры путей - это специальные преобразователи, которые позволяют извлекать значения из URL и передавать их в представления в нужном формате. Они указываются в угловых скобках <code>&lt;&gt;</code> как часть шаблона URL.</p>
+<blockquote>
+<p>[!info]</p>
+<h4>Синтаксис конвертеров путей ⚙️</h4>
+<p>Синтаксис конвертеров имеет вид: <code>&lt;тип:имя_переменной&gt;</code>. Например, <code>&lt;int:order_id&gt;</code> означает, что Django ожидает целое число и сохранит его в переменной <code>order_id</code>.</p>
+</blockquote>
+<h3>Какие типы конвертеров существуют 📋</h3>
+<p>Django предоставляет несколько встроенных конвертеров путей:</p>
+<table>
+<thead>
+<tr>
+<th>Конвертер</th>
+<th>Пример</th>
+<th>Значение переменной</th>
+<th>Когда использовать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td><code>orders/&lt;int:order_id&gt;/</code></td>
+<td>Целое число</td>
+<td>Для числовых идентификаторов</td>
+</tr>
+<tr>
+<td><code>str</code></td>
+<td><code>orders/&lt;str:order_str&gt;/</code></td>
+<td>Строка (без /)</td>
+<td>Для текстовых параметров</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td><code>orders/&lt;slug:order_slug&gt;/</code></td>
+<td>Строка в формате slug</td>
+<td>Для ЧПУ-ссылок</td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><code>orders/&lt;uuid:order_uuid&gt;/</code></td>
+<td>UUID</td>
+<td>Для уникальных идентификаторов</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td><code>files/&lt;path:file_path&gt;/</code></td>
+<td>Строка с /</td>
+<td>Для путей к файлам</td>
+</tr>
+</tbody>
+</table>
+<p>Конвертер <code>path</code> особенно полезен для работы с файловыми путями. Например, для URL <code>files/anekdoty/GPT/obezianka/</code> переменная <code>file_path</code> получит значение <code>"anekdoty/GPT/obezianka/"</code>.</p>
+<h2>Создание маршрутов в нашем проекте 🛠️</h2>
+<p>В Django маршруты определяются в файле <code>urls.py</code> с помощью функции <code>path()</code>:</p>
+<pre><code class="language-python">from django.contrib import admin
+from django.urls import path
+from core.views import landing, thanks, orders_list, order_detail
+
+urlpatterns = [
+    path(&quot;admin/&quot;, admin.site.urls),
+    path(&quot;&quot;, landing),
+    path(&quot;thanks/&quot;, thanks),
+    path(&quot;orders/&quot;, orders_list),
+    path(&quot;orders/&lt;int:order_id&gt;/&quot;, order_detail),
+]
+</code></pre>
+<p>Для главной страницы слеш не ставится, так как это корневой URL. Для всех остальных маршрутов слеши обязательны - это соглашение Django для единообразия URL-структуры.</p>
+<blockquote>
+<p>[!warning]</p>
+<h4>Единый стиль маршрутов ⚠️</h4>
+<p>Важно соблюдать единый стиль в написании URL:
+- Всегда используйте слеши в конце для вложенных маршрутов
+- Придерживайтесь единого стиля именования (snake_case или kebab-case)
+- Избегайте смешения разных стилей в одном проекте</p>
+</blockquote>
+<h3>Как работают параметры в путях? 🔍</h3>
+<p>Параметры в путях, такие как <code>order_id</code>, передаются в функцию представления как именованные аргументы. Функция <code>order_detail</code> принимает этот параметр и использует его для поиска заказа:</p>
+<pre><code class="language-python">def order_detail(request, order_id):
+    &quot;&quot;&quot;
+    Отвечает за маршрут 'orders/&lt;int:order_id&gt;/'
+    :param request: HttpRequest
+    :param order_id: int (номер заказа)
+    &quot;&quot;&quot;
+    return HttpResponse(f&quot;&lt;h1&gt;Детали заказа {order_id}&lt;/h1&gt;&quot;)
+</code></pre>
+<p><img alt="order_detail_int_converter.png" src="./media/order_detail_int_converter.png" /></p>
+<p>На изображении показано, как Django преобразует часть URL в целое число и передает его в представление. Под капотом Django использует регулярные выражения для извлечения и преобразования значений.</p>
+<h3>Модификация <code>order_detail</code> 🛠️</h3>
+<p>Мы добавили датасет в <code>core/data.py</code> и теперь можем использовать его для поиска заказа по <code>order_id</code>. Вот как выглядит обновленная функция:</p>
+<pre><code class="language-python">from .data import orders
+
+def order_detail(request, order_id):
+    &quot;&quot;&quot;
+    Отвечает за маршрут 'orders/&lt;int:order_id&gt;/'
+    :param request: HttpRequest
+    :param order_id: int (номер заказа)
+    &quot;&quot;&quot;
+    order = [order for order in orders if order[&quot;id&quot;] == order_id]
+    try:
+        order = order[0]
+
+    except IndexError:
+        return HttpResponse(&quot;&lt;h1&gt;Заказ не найден&lt;/h1&gt;&quot;, status=404)
+
+    else:
+        order_data = f&quot;&quot;&quot;&lt;h1&gt;Заказ {order[&quot;id&quot;]}&lt;/h1&gt;&lt;p&gt;Клиент: {order[&quot;client_name&quot;]}&lt;/p&gt;&quot;&quot;&quot;
+        return HttpResponse(order_data)
+</code></pre>
+<p>Функция теперь проверяет наличие заказа и возвращает 404, если заказ не найден. Однако создание HTML в коде - плохая практика. Это приводит к:</p>
+<ol>
+<li>Сложности поддержки</li>
+<li>Проблемам с безопасностью</li>
+<li>Трудностям разделения логики и представления</li>
+</ol>
+<blockquote>
+<p>[!info]</p>
+<h4>Решение проблемы с HTML 🎨</h4>
+<p>Шаблонизатор Django решает эти проблемы, позволяя:
+- Разделять логику и представление
+- Использовать наследование шаблонов
+- Применять фильтры и теги для форматирования
+- Обеспечивать безопасность через автоматическое экранирование</p>
+</blockquote>
+<p>В следующей версии мы используем шаблонизатор, передавая данные в контексте:</p>
+<p>```python
+def order_detail(request, order_id):
+    order = [order for order in orders if order["id"] == order_id]
+    try:
+        order = order[0]
+        context = {
+            "order": order,
+            "my_variable": "Hello, world!",
+        }
+    except IndexError:
+        return HttpResponse("<h1>Заказ не найден</h1>", status=404)
+    else:
+        return render(request, "order_detail.html", context=context)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script src="./assets/js/menu.js"></script>
+    <script src="./assets/js/codeCopy.js"></script>
+    <script src="./assets/js/media.js"></script>
+    <script src="./assets/js/parallax.js"></script>
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>
