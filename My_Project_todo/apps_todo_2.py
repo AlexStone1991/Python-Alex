@@ -90,7 +90,7 @@ def set_deadline():
     deadline_input = input("Установить дедлайн? (да/нет): ").strip().lower()
 
     if deadline_input == "да":
-        deadline_str = input("Введите дедлайн в формате ГГГГ-ММ-ДД ЧЧ:ММ: ")
+        deadline_str = input("Введите дедлайн в формате ГГГГ-ММ-ДД ЧЧ:ММ ")
         try:
             deadline = datetime.datetime.strptime(deadline_str, "%Y-%m-%d %H:%M")
             return deadline.strftime("%Y-%m-%d %H:%M")

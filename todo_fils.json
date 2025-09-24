@@ -1,1 +1,20 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "Дать в рот пожарнице",
+        "discription": "дать свой член в рот пожарнице",
+        "category": "Работа",
+        "created_date": "2025-09-24 21:20",
+        "deadline": null,
+        "status": false
+    },
+    {
+        "id": 2,
+        "title": "посрать кирипичами",
+        "discription": "срать кирпичами",
+        "category": "Личное",
+        "created_date": "2025-09-24 21:20",
+        "deadline": "2025-09-25 15:00",
+        "status": false
+    }
+]
