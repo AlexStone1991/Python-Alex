@@ -12,6 +12,7 @@ flask
 pyTelegramBotAPI
 python-telegram-bot
 flask_restx
+pillow_heif
 
 # .\.venv\Scripts\activate - активирует виртуальное окружение
 # pip install -r requirements.txt - устанавливает все зависимости из файла requirements.txt
