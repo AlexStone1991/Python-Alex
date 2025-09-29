@@ -1,17 +1,3 @@
-# Хранение контактов: имя, телефон, email, группа
-# Поиск контактов по имени/телефону
-# Группировка по категориям (друзья, работа, семья)
-# Импорт/экспорт контактов
-
-"""
-КРУТЫЕ ФИЧИ:
-📞 Умный поиск по части имени/телефона
-📂 Группы контактов
-📊 Статистика по группам
-💾 Резервное копирование
-🔍 Быстрый поиск
-"""
-
 from datetime import datetime
 import os
 import json
@@ -25,7 +11,7 @@ class Contact():
     def __init__(self, id, name, phone, email="", group=OTHER, notes="", date=None):
         self.id = id
         self.name = name
-        self.phone = phone
+        self.phone = phone.replace(" ", "").replace("(", "").replace(")", "").replace("-", "")
         self.email = email
         self.group = group
         self.notes = notes
@@ -41,19 +27,33 @@ class Contact():
             "notes": self.notes,
             "date": self.date
         }
-    
+
+# Добавление контакта
 def add_contact(contacts):
 
     id = len(contacts) + 1
     name = input("Введите имя контакта: ")
-    phone = input("Введите номер телефона: ")
-    email = input("Введите email (если есть): ")
+    while True:
+        phone = input("Введите номер телефона: ")
+        is_valid = validate_phone(phone)
+        if is_valid:
+            break
+        else:
+            print("Неверный формат номера телефона. Попробуйте снова.")
+
+    while True:
+        email = input("Введите email (если есть): ")
+        if validate_email(email):
+            break
+        else:
+            print("Неверный формат email. Попробуйте снова.")
     group = input("Введите группу (друзья, работа, семья, другое): ").lower()
     notes = input("Введите заметки (если есть): ")
     contact = Contact(id, name, phone, email, group, notes)
     contacts.append(contact)
     print(f"Контакт {name} добавлен!")
 
+# Сохранение и загрузка контактов
 def save_contacts(contacts):
     with open("contacts.json", "w", encoding="utf-8") as file:
         json.dump([contact.to_dict() for contact in contacts], file, ensure_ascii=False, indent=4)
@@ -68,7 +68,67 @@ def load_contacts():
             return contacts
     else:
         return []
-        
+
+# Валидация телефона
+def validate_phone(phone):
+    if not phone:
+        print("Номер телефона не может быть пустым.")
+        return False
+
+    cleaned_phone = phone.replace(" ", "").replace("(", "").replace(")", "").replace("-", "")
+    if not cleaned_phone.isdigit():
+        print("Номер телефона должен содержать только цифры.")
+        return False
+    
+    if len(cleaned_phone) < 5 or len(cleaned_phone) > 11:
+        print("Номер телефона должен содержать не менее 5 и не больше 11 цифр.")
+        return False
+    return True
+
+# Валидация email
+def validate_email(email):
+    if not email:
+        return True
+    if "@" not in email:
+        print("Email должен содержать символ @")
+        return False
+    parts = email.split("@")
+
+    if len(parts) !=2:
+        print("Неверный формат email")
+        return False
+    
+    if "." not in parts[1]:
+        print("Должна быть точка после @")
+        return False
+    
+    domin_parts = parts[1].split(".")
+    
+    if len(domin_parts[-1]) < 2:
+        print("После точки должен быть домен (ru, com и т.д.)")
+        return False
+    return True
+
+
+# Статистика по группам
+def show_contact_stats(contacts):
+    if not contacts:
+        print("Список контактов пуст.")
+        return
+
+    group_counts = {}
+    
+    for contact in contacts:
+        if contact.group in group_counts:
+            group_counts[contact.group] += 1
+        else:
+            group_counts[contact.group] = 1
+
+    print("\nСТАТИСТИКА ПО ГРУППАМ")
+    for group, count in group_counts.items():
+        print(f"{group.capitalize()}: {count} контактов")
+    most_popular_group = max(group_counts, key=group_counts.get)
+    print(f"\nСамая популярная группа: {most_popular_group.capitalize()}")
 
 # поиск по имени/телефону
 def search_contacts(contacts):
@@ -111,7 +171,7 @@ def search_contacts(contacts):
     else:
         print("Контакты не найдены.")
 
-# def show_all_contacts(contacts):
+# показать все контакты
 def show_all_contacts(contacts):
     if not contacts:
         print("Список контактов пуст.")
@@ -128,6 +188,7 @@ def show_all_contacts(contacts):
         print(f"Дата добавления: {contact.date}")
         print("-" * 30)
 
+# редактирование контакта
 def edit_contact(contacts):
     if not contacts:
         print("Список контактов пуст.")
@@ -166,6 +227,7 @@ def edit_contact(contacts):
     except ValueError:
         print("Пожалуйста, введите число!")
 
+# удаление контакта
 def delete_contact(contacts):
     if not contacts:
         print("Список контактов пуст.")
@@ -195,6 +257,19 @@ def delete_contact(contacts):
     except ValueError:
         print("Пожалуйста, введите число!")
 
+def backup_contacts(contacts):
+    backup_dir = "backups"
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_file = os.path.join(backup_dir, f"contacts_backup_{timestamp}.json")
+
+    with open(backup_file, "w", encoding="utf-8") as file:
+        json.dump([contact.to_dict() for contact in contacts], file, ensure_ascii=False, indent=4)
+    print("backup создан!")
+
+# главная функция
 def main():
     contacts =  load_contacts()
     
@@ -205,7 +280,9 @@ def main():
         print("3. Найти контакт")
         print("4. Редактировать контакт")
         print("5. Удалить контакт")
-        print("6. Выйти")
+        print("6. Статистика по группам")
+        print("7. Создать резервную копию")
+        print("8. Выйти")
         
         choice = input("Выберите действие: ")
         
@@ -223,14 +300,16 @@ def main():
             delete_contact(contacts)
             save_contacts(contacts)
         elif choice == "6":
+            show_contact_stats(contacts)
+        elif choice == "7":
+            backup_contacts(contacts)
+        elif choice == "8":
             break
         else:
             print("Неверный выбор!")
 
+    print("Программа завершена!")
+
+# ЗАпуск функция
 if __name__ == "__main__":
     main()
-
-        
-
-
-
