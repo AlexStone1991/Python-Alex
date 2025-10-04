@@ -1,6 +1,14 @@
 from datetime import datetime
 import os
 import json
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
+
+# print(Fore.RED + "Это красный текст")
+# print(Fore.GREEN + "Это зеленый текст") 
+# print(Fore.YELLOW + "Это желтый текст")
+# print(Fore.CYAN + "Это бирюзовый текст")
+# print(Style.BRIGHT + "Это яркий текст")
 
 class Contact():
     FRIENDS = "друзья"
@@ -39,19 +47,24 @@ def add_contact(contacts):
         if is_valid:
             break
         else:
-            print("Неверный формат номера телефона. Попробуйте снова.")
+            print(f"{Fore.RED}Неверный формат номера телефона. Попробуйте снова.")
 
     while True:
         email = input("Введите email (если есть): ")
         if validate_email(email):
             break
         else:
-            print("Неверный формат email. Попробуйте снова.")
-    group = input("Введите группу (друзья, работа, семья, другое): ").lower()
+            print(f"{Fore.RED}Неверный формат email. Попробуйте снова.")
+    while True:
+        group = input("Введите группу (друзья, работа, семья, другое): ").lower()
+        if validate_group(group):
+            break
+        else:
+            print(f"{Fore.RED}Попробуйте снова.")
     notes = input("Введите заметки (если есть): ")
     contact = Contact(id, name, phone, email, group, notes)
     contacts.append(contact)
-    print(f"Контакт {name} добавлен!")
+    print(f"{Fore.GREEN}Контакт {name} добавлен!")
 
 # Сохранение и загрузка контактов
 def save_contacts(contacts):
@@ -72,16 +85,16 @@ def load_contacts():
 # Валидация телефона
 def validate_phone(phone):
     if not phone:
-        print("Номер телефона не может быть пустым.")
+        print(f"{Fore.RED}Номер телефона не может быть пустым.")
         return False
 
     cleaned_phone = phone.replace(" ", "").replace("(", "").replace(")", "").replace("-", "")
     if not cleaned_phone.isdigit():
-        print("Номер телефона должен содержать только цифры.")
+        print(f"{Fore.RED}Номер телефона должен содержать только цифры.")
         return False
     
     if len(cleaned_phone) < 5 or len(cleaned_phone) > 11:
-        print("Номер телефона должен содержать не менее 5 и не больше 11 цифр.")
+        print(f"{Fore.RED}Номер телефона должен содержать не менее 5 и не больше 11 цифр.")
         return False
     return True
 
@@ -90,30 +103,37 @@ def validate_email(email):
     if not email:
         return True
     if "@" not in email:
-        print("Email должен содержать символ @")
+        print(f"{Fore.RED}Email должен содержать символ @")
         return False
     parts = email.split("@")
 
     if len(parts) !=2:
-        print("Неверный формат email")
+        print(f"{Fore.RED}Неверный формат email")
         return False
     
     if "." not in parts[1]:
-        print("Должна быть точка после @")
+        print(f"{Fore.RED}Должна быть точка после @")
         return False
     
     domin_parts = parts[1].split(".")
     
     if len(domin_parts[-1]) < 2:
-        print("После точки должен быть домен (ru, com и т.д.)")
+        print(f"{Fore.RED}После точки должен быть домен (ru, com и т.д.)")
         return False
     return True
 
+def validate_group(group):
+    valid_groups = [Contact.FRIENDS, Contact.WORK, Contact.FAMILY, Contact.OTHER]
+    if group in valid_groups:
+        return True
+    else:
+        print(f"{Fore.RED}Неверная группа. Выберите из: друзья, работа, семья, другое")
+        return False
 
 # Статистика по группам
 def show_contact_stats(contacts):
     if not contacts:
-        print("Список контактов пуст.")
+        print(f"{Fore.RED}Список контактов пуст.")
         return
 
     group_counts = {}
@@ -126,9 +146,9 @@ def show_contact_stats(contacts):
 
     print("\nСТАТИСТИКА ПО ГРУППАМ")
     for group, count in group_counts.items():
-        print(f"{group.capitalize()}: {count} контактов")
+        print(f"{Fore.BLUE}{group.capitalize()}: {count} контактов")
     most_popular_group = max(group_counts, key=group_counts.get)
-    print(f"\nСамая популярная группа: {most_popular_group.capitalize()}")
+    print(f"\n{Fore.GREEN}Самая популярная группа: {most_popular_group.capitalize()}")
 
 # поиск по имени/телефону
 def search_contacts(contacts):
@@ -140,9 +160,9 @@ def search_contacts(contacts):
             found_contacts.append(contact)
 
     if found_contacts:
-        print("\nНайденные контакты:")
+        print(f"\n{Fore.BLUE}Найденные контакты:")
         for contact in found_contacts:
-            print(f"{contact.id}. {contact.name} - {contact.phone} ({contact.group})")
+            print(f"{Fore.GREEN}{contact.id}. {contact.name} - {contact.phone} ({contact.group})")
 
         try:
             contact_id = int(input("Введите ID контакта для просмотра (или 0 для выхода): "))
@@ -158,40 +178,40 @@ def search_contacts(contacts):
                     break
             
             if selected_contact:
-                print(f"\nИнформация о контакте {selected_contact.name}:")
-                print(f"Телефон: {selected_contact.phone}")
-                print(f"Email: {selected_contact.email}")
-                print(f"Группа: {selected_contact.group}")
-                print(f"Заметки: {selected_contact.notes}")
+                print(f"\n{Fore.GREEN}Информация о контакте {selected_contact.name}:")
+                print(f"{Fore.YELLOW}Телефон: {selected_contact.phone}")
+                print(f"{Fore.BLUE}Email: {selected_contact.email}")
+                print(f"{Fore.BLUE}Группа: {selected_contact.group}")
+                print(f"{Fore.BLUE}Заметки: {selected_contact.notes}")
             else:
-                print("Контакт с таким ID не найден в результатах поиска.")
+                print(f"{Fore.RED}Контакт с таким ID не найден в результатах поиска.")
                 
         except ValueError:
-            print("Пожалуйста, введите число!")
+            print(f"{Fore.RED}Пожалуйста, введите число!")
     else:
-        print("Контакты не найдены.")
+        print(f"{Fore.RED}Контакты не найдены.")
 
 # показать все контакты
 def show_all_contacts(contacts):
     if not contacts:
-        print("Список контактов пуст.")
+        print(f"{Fore.RED}Список контактов пуст.")
 
-    print("\nСписок всех контактов:")
+    print(f"\n{Fore.BLUE}Список всех контактов:")
 
     for contact in contacts:
-        print(f"\nID {contact.id}")
-        print(f"Имя: {contact.name}")
-        print(f"Телефон: {contact.phone}")
-        print(f"Email: {contact.email}")
-        print(f"Группа: {contact.group}")
-        print(f"Заметки: {contact.notes}")
-        print(f"Дата добавления: {contact.date}")
+        print(f"\n{Fore.YELLOW}ID {Style.BRIGHT}{contact.id}")
+        print(f"{Fore.GREEN}Имя: {Style.BRIGHT}{contact.name}")
+        print(f"{Fore.BLUE}Телефон: {contact.phone}")
+        print(f"{Fore.BLUE}Email: {contact.email}")
+        print(f"{Fore.BLUE}Группа: {contact.group}")
+        print(f"{Fore.BLUE}Заметки: {contact.notes}")
+        print(f"{Fore.YELLOW}Дата добавления: {Style.BRIGHT}{contact.date}")
         print("-" * 30)
 
 # редактирование контакта
 def edit_contact(contacts):
     if not contacts:
-        print("Список контактов пуст.")
+        print(f"{Fore.RED}Список контактов пуст.")
         return
 
     # Показываем все контакты для выбора
@@ -203,7 +223,7 @@ def edit_contact(contacts):
         # Ищем контакт по ID
         for contact in contacts:
             if contact.id == contact_id:
-                print(f"\nРедактирование контакта: {contact.name}")
+                print(f"\n{Fore.BLUE}Редактирование контакта: {contact.name}")
                 
                 # Предлагаем изменить каждое поле
                 new_name = input(f"Имя ({contact.name}): ") or contact.name
@@ -219,18 +239,18 @@ def edit_contact(contacts):
                 contact.group = new_group
                 contact.notes = new_notes
                 
-                print("Контакт успешно обновлен!")
+                print(f"{Fore.GREEN}Контакт успешно обновлен!")
                 return
                 
-        print("Контакт с таким ID не найден.")
+        print(f"{Fore.RED}Контакт с таким ID не найден.")
         
     except ValueError:
-        print("Пожалуйста, введите число!")
+        print(f"{Fore.RED}Пожалуйста, введите число!")
 
 # удаление контакта
 def delete_contact(contacts):
     if not contacts:
-        print("Список контактов пуст.")
+        print(f"{Fore.RED}Список контактов пуст.")
         return
 
     # Показываем все контакты
@@ -246,16 +266,16 @@ def delete_contact(contacts):
                 confirm = input(f"Удалить контакт '{contact.name}'? (да/нет): ")
                 if confirm.lower() == 'да':
                     deleted_contact = contacts.pop(i)
-                    print(f"Контакт '{deleted_contact.name}' удален!")
+                    print(f"{Fore.GREEN}Контакт '{deleted_contact.name}' удален!")
                     return
                 else:
-                    print("Удаление отменено.")
+                    print(f"{Fore.BLUE}Удаление отменено.")
                     return
                     
-        print("Контакт с таким ID не найден.")
+        print(f"{Fore.RED}Контакт с таким ID не найден.")
         
     except ValueError:
-        print("Пожалуйста, введите число!")
+        print(f"{Fore.RED}Пожалуйста, введите число!")
 
 def backup_contacts(contacts):
     backup_dir = "backups"
@@ -267,24 +287,24 @@ def backup_contacts(contacts):
 
     with open(backup_file, "w", encoding="utf-8") as file:
         json.dump([contact.to_dict() for contact in contacts], file, ensure_ascii=False, indent=4)
-    print("backup создан!")
+    print(f"{Fore.GREEN}backup создан!")
 
 # главная функция
 def main():
     contacts =  load_contacts()
     
     while True:
-        print("\n=== КОНТАКТНЫЙ МЕНЕДЖЕР ===")
-        print("1. Добавить контакт")
-        print("2. Показать все контакты") 
-        print("3. Найти контакт")
-        print("4. Редактировать контакт")
-        print("5. Удалить контакт")
-        print("6. Статистика по группам")
-        print("7. Создать резервную копию")
-        print("8. Выйти")
+        print(f"\n{Fore.CYAN}{Style.BRIGHT}=== КОНТАКТНЫЙ МЕНЕДЖЕР ===\n")
+        print(f"{Fore.YELLOW}1. Добавить контакт")
+        print(f"{Fore.YELLOW}2. Показать все контакты")
+        print(f"{Fore.YELLOW}3. Найти контакт")
+        print(f"{Fore.YELLOW}4. Редактировать контакт")
+        print(f"{Fore.YELLOW}5. Удалить контакт")
+        print(f"{Fore.YELLOW}6. Статистика по группам")
+        print(f"{Fore.YELLOW}7. Создать резервную копию")
+        print(f"{Fore.YELLOW}8. Выйти")
         
-        choice = input("Выберите действие: ")
+        choice = input(f"\n{Fore.WHITE}{Style.BRIGHT}Выберите действие: ")
         
         if choice == "1":
             add_contact(contacts)
@@ -306,9 +326,9 @@ def main():
         elif choice == "8":
             break
         else:
-            print("Неверный выбор!")
+            print(f"{Fore.RED}Неверный выбор!")
 
-    print("Программа завершена!")
+    print(f"{Fore.RED}Программа завершена!")
 
 # ЗАпуск функция
 if __name__ == "__main__":
